@@ -21,20 +21,19 @@
     }
 
     .card {
-      width: 80vw;
-      height: 50vh;
-      max-width: 400px;
-      max-height: 250px;
+      width: 600px;
+      height: 500px;
+      position: relative;
       transform-style: preserve-3d;
       transition: transform 0.6s;
       cursor: pointer;
       border-radius: 10px;
-      overflow: hidden;
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     }
 
-    .card:hover {
-      transform: rotateX(15deg);
+    .card:hover,
+    .card.flipped {
+      transform: rotateY(180deg);
     }
 
     .face {
@@ -42,22 +41,22 @@
       height: 100%;
       position: absolute;
       backface-visibility: hidden;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      border-radius: 10px;
+      overflow: hidden;
+    }
+
+    .front,
+    .back {
+      background-size: cover;
     }
 
     .front {
-      background: url('Shubhum_Ordination_front.jpg');
-      background-size: cover;
-      border-radius: 10px;
+      background: url('Shubhum_Ordination_front.jpg') center/cover;
     }
 
     .back {
-      background: url('Shubhum Ordination-backside.jpg');
-      background-size: cover;
+      background: url('Shubhum_Ordination-backside.jpg') center/cover;
       transform: rotateY(180deg);
-      border-radius: 10px;
     }
   </style>
 </head>
@@ -70,9 +69,19 @@
   </div>
 
   <script>
-    document.querySelector('.card').addEventListener('click', function() {
-      this.classList.toggle('flipped');
+    const card = document.querySelector('.card');
+
+    // Add click event listener for flipping on mobile devices
+    card.addEventListener('click', function() {
+      if (isMobileDevice()) {
+        this.classList.toggle('flipped');
+      }
     });
+
+    // Detect if the device is a mobile device
+    function isMobileDevice() {
+      return (typeof window.orientation !== "undefined") || (navigator.userAgent.indexOf('IEMobile') !== -1);
+    }
   </script>
 </body>
 </html>
