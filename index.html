@@ -74,19 +74,58 @@
   </div>
 
   <script>
-    const card = document.querySelector('.card');
+  const card = document.querySelector('.card');
+  let isMobile = false;
 
-    // Add click event listener for flipping on mobile devices
-    card.addEventListener('click', function() {
-      if (isMobileDevice()) {
+  // Check if the device is a mobile device
+  function checkIfMobile() {
+    return (typeof window.orientation !== "undefined") || (navigator.userAgent.indexOf('IEMobile') !== -1);
+  }
+
+  // Add click event listener for flipping on mobile devices
+  function flipOnTap() {
+    if (isMobile) {
+      card.addEventListener('click', function() {
         this.classList.toggle('flipped');
-      }
+      });
+    }
+  }
+
+  // Handle touch events for mobile devices
+  function handleTouch() {
+    let startX;
+    let startY;
+
+    card.addEventListener('touchstart', function(e) {
+      startX = e.touches[0].clientX;
+      startY = e.touches[0].clientY;
     });
 
-    // Detect if the device is a mobile device
-    function isMobileDevice() {
-      return (typeof window.orientation !== "undefined") || (navigator.userAgent.indexOf('IEMobile') !== -1);
-    }
-  </script>
+    card.addEventListener('touchend', function(e) {
+      const endX = e.changedTouches[0].clientX;
+      const endY = e.changedTouches[0].clientY;
+
+      const deltaX = Math.abs(startX - endX);
+      const deltaY = Math.abs(startY - endY);
+
+      if (deltaX < 10 && deltaY < 10) {
+        card.classList.toggle('flipped');
+      }
+    });
+  }
+
+  // Initialize mobile-specific functionality
+  function initMobile() {
+    isMobile = checkIfMobile();
+    flipOnTap();
+    handleTouch();
+  }
+
+  // Initialize mobile-specific functionality when the DOM is fully loaded
+  document.addEventListener("DOMContentLoaded", function() {
+    initMobile();
+  });
+</script>
+
 </body>
 </html>
